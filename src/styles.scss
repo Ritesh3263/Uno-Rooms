@@ -1,1 +1,126 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$uno-rooms-primary: mat.define-palette(mat.$indigo-palette);
+$uno-rooms-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$uno-rooms-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$uno-rooms-theme: mat.define-light-theme((
+  color: (
+    primary: $uno-rooms-primary,
+    accent: $uno-rooms-accent,
+    warn: $uno-rooms-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($uno-rooms-theme);
+
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, html, body{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background-color: #F2F2F2;
+    font-family: 'Poppins', sans-serif;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mdc-line-ripple {   display: none; }
+.mdc-text-field--no-label:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) .mat-mdc-form-field-infix{ padding: 10px 0; margin: auto 0; min-height: auto;}
+.mat-mdc-form-field-flex{height: -webkit-fill-available}
+.mat-datepicker-toggle.mat-datepicker-toggle {
+  color: rgb(249 115 22) !important;
+}
+.mat-calendar-body-today{
+  background-color: rgba(249, 115, 22,0.2)!important;
+}
+.mat-calendar-body-selected{
+  background-color: rgb(249 115 22) !important;
+}
+.mat-calendar-body-in-range::before{
+  background-color: rgb(249 115 22)!important;
+  opacity: 0.2;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical){
+  background-color: rgb(249 115 22)!important;
+  opacity: 0.4;
+  color: #F2F2F2;
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////Checkbixes Styles //////////////////////
+
+/* Hide default checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #f97316; /* Border color */
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent; /* Default background */
+  position: relative;
+}
+
+/* Checked state */
+input[type="checkbox"]:checked {
+  background-color: #f97316; /* Change background on checked */
+  border-color: #f97316;
+}
+
+/* Add checkmark when checked */
+input[type="checkbox"]::before {
+  content: "✔";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: white;
+  display: none;
+}
+
+/* Show checkmark when checked */
+input[type="checkbox"]:checked::before {
+  display: block;
+}
