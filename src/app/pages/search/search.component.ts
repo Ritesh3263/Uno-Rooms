@@ -1,18 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 import { SearchFilterService } from 'src/app/service/search-filter.service';
 import { SupabaseService } from 'src/app/service/supabase.service';
+import { BookingPopupComponent } from '../booking-popup/booking-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
+
 export class SearchComponent implements OnInit, OnDestroy  {
+
   hotels: any[] = []; // Add this line to store data locally
   allHotels: any[] = [];
   searchLocation: string = '';
@@ -20,26 +25,43 @@ export class SearchComponent implements OnInit, OnDestroy  {
   checkoutDate: string = '';
   guests: number = 1;
 
+  maxPriceHotel: number = 6000;
+  minPriceHotel: number = 0;
+  selectedMaxPrice: number = 6000; // Default max price selected
+
   totalAmenities = ['wifi', 'pool', 'parking', 'breakfast']; 
   selectedAmenities: string[] = []; 
 
-  constructor(private supabase: SupabaseService, private searchFilter: SearchFilterService) {
+  cityControl = new FormControl('');
+  filteredCities$: Observable<string[]> = of([]);
+
+
+  constructor(private supabase: SupabaseService, private searchFilter: SearchFilterService, public dialog: MatDialog) {
   }
+
 
   ngOnInit(): void {
     // Load filters from localStorage
     const storedFilters = this.searchFilter.getFilters();
-    this.searchLocation = storedFilters.searchLocation;
-    this.checkinDate = storedFilters.checkinDate;
-    this.checkoutDate = storedFilters.checkoutDate;
-    this.guests = storedFilters.guests;
+    this.searchLocation = storedFilters.searchLocation || '';
+    this.checkinDate = storedFilters.checkinDate || '';
+    this.checkoutDate = storedFilters.checkoutDate || '';
+    this.guests = storedFilters.guests || 1;
+
+    this.filteredCities$ = this.cityControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300), // Delay to prevent too many API calls
+      distinctUntilChanged(),
+      switchMap(value => this.filterLocations(value || ''))
+    );
 
     // console.log('Loaded filters:', storedFilters);
 
     this.searchFilter.fetchAvailableHotels();
 
+
     // Subscribe to search filters
-    this.searchFilter.filters$.subscribe((filters) => {
+    this.searchFilter.filters$.pipe(takeUntil(this.destroy$)).subscribe((filters) => {
       this.searchLocation = filters.searchLocation;
       this.checkinDate = filters.checkinDate;
       this.checkoutDate = filters.checkoutDate;
@@ -48,9 +70,11 @@ export class SearchComponent implements OnInit, OnDestroy  {
 
 
     // Subscribe to filtered hotels
-    this.searchFilter.hotels$.subscribe((hotels) => {
+    this.searchFilter.hotels$.pipe(takeUntil(this.destroy$)).subscribe((hotels) => {
       this.hotels = hotels;
       this.allHotels = hotels; // Keep original list for filtering
+      // this.calculatePriceFilter();
+
     });
 
     
@@ -73,6 +97,17 @@ export class SearchComponent implements OnInit, OnDestroy  {
   }
 
 
+  filterLocations(value: string): Observable<string[]> {
+    return this.supabase.getLocations().pipe(
+      map(locations => {
+        const filterValue = value.toLowerCase();
+        return (locations || [])
+          .map(loc => loc.locationName) // Extract only city names
+          .filter(city => city.toLowerCase().includes(filterValue));
+      })
+      
+    );
+  }
 
 
 
@@ -116,27 +151,50 @@ export class SearchComponent implements OnInit, OnDestroy  {
 
   // Function to filter hotels dynamically
   filterHotels() {
-    if (this.selectedAmenities.length === 0) {
-      this.hotels = this.allHotels; // Reset filters
-      return;
-    }
+    // if (this.selectedAmenities.length === 0) {
+    //   this.hotels = this.allHotels; // Reset filters
+    //   return;
+    // }
   
     this.hotels = this.allHotels.filter(hotel => {
       // Ensure hotelAmenities is always an array
       const amenities = typeof hotel.hotelamenities === 'string' 
         ? hotel.hotelAmenities.toLowerCase().split(',') 
         : Array.isArray(hotel.hotelamenities) 
-          ? hotel.hotelamenities.map((a: string) => a.toLowerCase()) 
-          : [];
+        ? hotel.hotelamenities.map((a: string) => a.toLowerCase()) 
+        : [];
   
-      console.log(`Checking Hotel: ${hotel.name}`, "Amenities:", amenities);
+      // console.log(`Checking Hotel: ${hotel.name}`, "Amenities:", amenities);
   
-      // Return true if at least one selected amenity is present in hotelAmenities
-      return this.selectedAmenities.some(a => amenities.includes(a));
+      // Check selected Filters
+      const matchesAmenities = this.selectedAmenities.length === 0 || this.selectedAmenities.some(a => amenities.includes(a));
+      const matchesPrice = hotel.lowestprice >= this.minPriceHotel && hotel.lowestprice <= this.selectedMaxPrice;
+
+      return matchesAmenities && matchesPrice;
     });
   
     console.log("Filtered Hotels:", this.hotels);
   }
+
+
+  calculatePriceFilter() {
+    this.filterHotels(); // ✅ Re-apply filtering when price is changed
+  }
+
+
+
+
+
+
+  openBookingDetails(hotel: any): void {
+    this.dialog.open(BookingPopupComponent, {
+      width: '800px',
+      data: { hotel, searchLocation: this.searchLocation }
+    });
+  }
+
+
+
 
 
 }

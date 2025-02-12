@@ -1,0 +1,5 @@
+.scrollable-container{
+    padding-right: 20px; /* Moves scrollbar inset */
+    overflow-y: auto;
+    scrollbar-gutter: stable; /* Keeps space when scrollbar appears */
+}

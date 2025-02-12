@@ -3,10 +3,18 @@
 <div class="bg-white shadow-sm border-t">
     <div class="max-w-7xl mx-auto px-4 py-4">
         <div class="flex items-center space-x-4 text-gray-500">
-            <div class="flex flex-1 items-center relative ">
-                <input [(ngModel)]="searchLocation" (ngModelChange)="updateFilters()" type="text" placeholder="Search destinations" 
+            <div class="flex flex-1 items-center relative custom-autocomplete">
+
+                <input [(ngModel)]="searchLocation" matInput [formControl]="cityControl" [matAutocomplete]="auto" (ngModelChange)="updateFilters()" type="text" placeholder="Search destinations" 
                     class=" space-x-2 cursor-pointer bg-gray-100 text-gray-500 rounded-l-full py-2 px-10  border-none focus:outline-none flex-1 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none"
                 >
+                <mat-autocomplete #auto="matAutocomplete" panelWidth="200px" panelClass="custom-autocomplete">
+                    <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">
+                      {{ city }}
+                    </mat-option>
+                </mat-autocomplete>
+
+
                 <div class="absolute h-auto w-3.5 inset-y-0 left-2 flex items-center pointer-events-none text-gray-500" >
                     <svg class="w-4 h-4" fill="#f97316" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
                 </div>
@@ -67,10 +75,10 @@
                 <div class="space-y-6">
                     <div>
                         <h3 class="font-medium mb-3">Price Range</h3>
-                        <input type="range" min="0" max="1000" value="1000" class="w-full h-2 bg-gray-300 rounded-lg cursor-pointer accent-orange-500 ">
+                        <input [(ngModel)]="selectedMaxPrice"  (input)="calculatePriceFilter()" type="range" [min]="minPriceHotel" [max]="maxPriceHotel" class="w-full h-2 bg-gray-300 rounded-lg cursor-pointer accent-orange-500 ">
                         <div class="flex justify-between text-sm text-gray-400">
-                            <span>$0</span>
-                            <span>$1000</span>
+                            <span>₹{{minPriceHotel}}</span>
+                            <span>₹{{selectedMaxPrice}}</span>
                         </div>
                     </div>
 
@@ -157,7 +165,7 @@
                                     <span class="text-2xl font-bold text-gray-700">₹{{hotel.lowestprice}}</span>
                                     <span class="text-gray-400">/night</span>
                                 </div>
-                                <button class="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-400 transition-colors">
+                                <button (click)="openBookingDetails(hotel)" class="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-400 transition-colors">
                                     View Details
                                 </button>
                             </div>

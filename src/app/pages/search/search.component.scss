@@ -1,6 +1,16 @@
 .custom-width{
-   ::ng-deep .mat-mdc-form-field-infix{
+   .mat-mdc-form-field-infix{
         width: 110px !important;
         padding: 0!important;
     }
 }
+
+
+
+
+.mat-autocomplete-panel:hover {
+    .mat-option:hover {
+      background: blue;
+      color: white;
+    }
+  }
