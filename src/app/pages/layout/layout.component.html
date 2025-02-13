@@ -3,9 +3,9 @@
   <nav class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <div class="flex items-center gap-2 cursor-pointer" [routerLink]="['/home']">
-          <img height="15" width="15" src="./assets/images/building-solid.svg" alt="logo">
-          <span class="font-medium text-xl text-gray-400"><span class="text-orange-500 font-extrabold">Uno </span>Rooms</span>
+        <div class="flex items-center gap-1 md:gap-2 cursor-pointer" [routerLink]="['/home']">
+          <img class="h-4 md:h-5 w-4 md:w-5" height="15" width="15" src="./assets/images/building-solid.svg" alt="logo">
+          <span class="font-medium text-base md:text-xl text-gray-400"><span class="text-orange-500 font-extrabold">Uno </span>Rooms</span>
         </div>
         <nav class="hidden md:flex space-x-6">
           <a routerLink="/dashboard" class="text-gray-400 hover:text-orange-500">Hotels</a>
@@ -19,7 +19,7 @@
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
               </svg>
-              <h4 class="text-gray-600">Hi, {{loggedUserData?.user.user_metadata.display_name.split(' ')[0]}}</h4>
+              <h4 class="text-gray-700">Hi, {{loggedUserData?.user.user_metadata.display_name.split(' ')[0]}}</h4>
           </button>
           
           <button 

@@ -51,7 +51,7 @@
               >
             </div> -->
             <div class="relative">
-              <mat-form-field class="max-w-full md:max-w-[14.5rem] rounded-full overflow-hidden h-12 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all " subscriptSizing="dynamic">
+              <mat-form-field class="w-full max-w-full md:max-w-[14.5rem] rounded-full overflow-hidden h-12 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all " subscriptSizing="dynamic">
                 <!-- <mat-label>Enter a date range</mat-label> -->
                 <mat-date-range-input [rangePicker]="picker" class="rounded-full">
                   <input [(ngModel)]="selectedDateFrom" (dateChange)="updateSelectedDates($event, 'from')" matStartDate placeholder="Start date" class="!text-gray-500">

@@ -1,5 +1,5 @@
 <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-[80vw] w-full  bg-white rounded-[2rem] shadow-lg p-8">
+    <div class="max-w-[90vw] md:max-w-[80vw] w-full  bg-white rounded-3xl md:rounded-[2rem] shadow-lg p-4 md:p-8">
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <button [routerLink]="['/home']" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -9,20 +9,8 @@
                 </svg>
             </button>
             <div class="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/>
-                <path d="M2 21h20"/>
-                <path d="M6 7h.01"/>
-                <path d="M6 11h.01"/>
-                <path d="M6 15h.01"/>
-                <path d="M12 7h.01"/>
-                <path d="M12 11h.01"/>
-                <path d="M12 15h.01"/>
-                <path d="M18 7h.01"/>
-                <path d="M18 11h.01"/>
-                <path d="M18 15h.01"/>
-            </svg>
-            <span class="font-semibold text-lg">Uno Rooms</span>
+                <img height="15" width="15" src="./assets/images/building-solid.svg" alt="logo">
+                <span class="font-semibold text-lg text-gray-400"><span class="text-orange-500 font-extrabold">Uno</span> Rooms</span>
             </div>
             <div class="text-sm text-gray-500">
             Step {{isRegistered? '1' : '2'}} / 3
@@ -33,12 +21,12 @@
 
             <!-- Main Content -->
             <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold mb-2">{{isRegistered? 'Who are you?' : 'Oh, you are back!'}}</h1>
+                <h1 class="text-2xl font-bold mb-2 text-gray-700">{{isRegistered? 'Wait, Who are you?' : 'Oh, you are back!'}}</h1>
                 <!-- <p class="text-gray-600">Enter your Details</p> -->
             </div>
 
             <!-- Register -->
-            <form *ngIf="isRegistered" (submit)="registerUser(); $event.preventDefault()" class="space-y-6">
+            <form *ngIf="isRegistered" (submit)="registerUser(); $event.preventDefault()" class="space-y-3 md:space-y-6">
                 <div class="space-y-2">
                 <label for="fullName" class="block text-sm font-medium text-gray-700 ml-2">
                     Full Name
@@ -107,7 +95,7 @@
             </form>
 
             <!-- Login -->
-            <form *ngIf="!isRegistered" (submit)="loginUser(); $event.preventDefault()" class="space-y-6">
+            <form *ngIf="!isRegistered" (submit)="loginUser(); $event.preventDefault()" class="space-y-3 md:space-y-6">
                 <div class="space-y-2">
                 <label for="login" class="block text-sm font-medium text-gray-700 ml-2">
                     Login ID
@@ -124,7 +112,7 @@
 
                 <div class="space-y-2">
                 <label for="password" class="block text-sm font-medium text-gray-700 ml-2">
-                    Pawword
+                    Password
                 </label>
                 <input required
                     [(ngModel)]="password"

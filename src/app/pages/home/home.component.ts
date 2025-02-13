@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   selectedDateFrom: string = '';
   dateTo: Date | null = null;
   selectedDateTo: string = '';
-  selectedGuest: number = 0;
+  selectedGuest: number = 1;
 
 
 

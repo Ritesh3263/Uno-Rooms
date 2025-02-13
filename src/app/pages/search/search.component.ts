@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 
 export class SearchComponent implements OnInit, OnDestroy  {
+  isMobile: boolean = false;
 
   hotels: any[] = []; // Add this line to store data locally
   allHotels: any[] = [];
@@ -91,8 +92,14 @@ export class SearchComponent implements OnInit, OnDestroy  {
     });
 
 
+    ////////////////////Check for screen size////////////////
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    this.isMobile = mediaQuery.matches;
 
-
+    mediaQuery.addEventListener('change', (e) => {
+      this.isMobile = e.matches;
+    });
+    /////////////////////////////////////////////////////////
 
   }
 
